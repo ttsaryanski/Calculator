@@ -33,6 +33,10 @@ function App() {
         } else {
             setResult(result + value);
         }
+
+        if (result === "Undefined") {
+            setResult(value);
+        }
     };
 
     const setResultToZero = (e) => {
