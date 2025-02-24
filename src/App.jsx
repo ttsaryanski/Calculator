@@ -9,10 +9,29 @@ function App() {
     }
 
     const showValueInResult = (e) => {
+        const value = e.target.value;
+        const operators = ["+", "-", "*", "/", "%"];
+
+        if (
+            operators.includes(result.toString().slice(-1)) &&
+            operators.includes(value)
+        ) {
+            return;
+        }
+
+        if (value === ".") {
+            const parts = result.toString().split(/[\+\-\*/%]/);
+            const lastNumber = parts[parts.length - 1];
+
+            if (lastNumber.includes(".")) {
+                return;
+            }
+        }
+
         if (result === 0) {
-            setResult((result = e.target.value));
+            setResult(value);
         } else {
-            setResult(result + e.target.value);
+            setResult(result + value);
         }
     };
 
@@ -29,21 +48,28 @@ function App() {
     };
 
     const calculateResult = (e) => {
+        if (result.includes("/0")) {
+            setResult((result = "Undefined"));
+            return;
+        }
+
         if (result.includes("%")) {
             let expression = result.toString();
-            let match = expression.match(/([\d.]+)([\+\-\*/])([\d.]+)%/);
+            expression = expression.replace(
+                /(\d+(\.\d+)?)\s*([\+\-\*/])\s*(\d+(\.\d+)?)%/g,
+                (match, num1, _, operator, num2) => {
+                    let base = parseFloat(num1);
+                    let percentage = parseFloat(num2) / 100;
 
-            while (match) {
-                let base = parseFloat(match[1]);
-                let operator = match[2];
-                let percentage = parseFloat(match[3]);
-                let calculatedValue = (base * percentage) / 100;
-                expression = expression.replace(
-                    match[0],
-                    `${base}${operator}${calculatedValue}`
-                );
-                match = expression.match(/([\d.]+)([\+\-\*/])([\d.]+)%/);
-            }
+                    if (operator === "+" || operator === "-") {
+                        return `${base} ${operator} (${base} * ${percentage})`;
+                    } else if (operator === "*") {
+                        return `${base} * ${percentage}`;
+                    } else if (operator === "/") {
+                        return `${base} / ${percentage}`;
+                    }
+                }
+            );
 
             setResult(eval(expression));
         } else {
