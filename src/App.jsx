@@ -28,8 +28,10 @@ function App() {
             }
         }
 
-        if (result === 0) {
-            setResult(value);
+        if (result == 0) {
+            if (value != 0) {
+                setResult(value);
+            }
         } else {
             setResult(result + value);
         }
@@ -44,7 +46,8 @@ function App() {
     };
 
     const removeLastNumber = (e) => {
-        if (result === 0) {
+        result = result.toString();
+        if (result == 0) {
             return;
         } else {
             setResult(result.slice(0, -1));
