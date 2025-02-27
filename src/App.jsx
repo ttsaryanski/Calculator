@@ -29,7 +29,7 @@ function App() {
         }
 
         if (result == 0) {
-            if (value != 0) {
+            if (value != 0 && value != "*" && value != "/" && value != "%") {
                 setResult(value);
             }
         } else {
