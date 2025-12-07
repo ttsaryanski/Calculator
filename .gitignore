@@ -24,3 +24,4 @@ dist-ssr
 *.sw?
 
 HELP.md
+.firebase/*.cache
